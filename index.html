@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masterclass Interactiva: Simulador Psicométrico TTCT Figural (300 Protocolos)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* CSS Animations */
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 0.9; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+      50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 30px rgba(56, 189, 248, 0.8); }
+    }
+    @keyframes flowLine {
+      0% { stroke-dashoffset: 100; }
+      100% { stroke-dashoffset: 0; }
+    }
+    @keyframes scanLight {
+      0% { top: 0%; opacity: 0.2; }
+      50% { opacity: 0.8; }
+      100% { top: 95%; opacity: 0.2; }
+    }
+    .node-active { animation: pulseGlow 2s infinite ease-in-out; border-color: #38bdf8 !important; }
+    .scan-bar { position: absolute; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #38bdf8, transparent); animation: scanLight 2.5s infinite linear; }
+    .tab-active { border-bottom: 3px solid #38bdf8; color: #38bdf8; font-weight: 800; }
+    .career-card.active { border-color: #38bdf8; background-color: rgba(56, 189, 248, 0.12); }
+  </style>
+</head>
+<body class="bg-[var(--background,#070a12)] text-[var(--foreground,#f1f5f9)] antialiased min-h-screen p-3 md:p-6 font-sans">
+
+  <!-- Master Wrapper -->
+  <div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- HERO HEADER: MASTERCLASS FORMAT -->
+    <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+      <div class="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+        <div class="space-y-2 max-w-3xl">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider">Laboratorio Pedagógico &amp; Psicométrico</span>
+            <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider">Simulador Paso a Paso</span>
+          </div>
+          <h1 class="text-2xl md:text-3xl font-black tracking-tight text-white">
+            ¿Cómo se Evalúa el Pensamiento Divergente en 300 Cuadernillos?
+          </h1>
+          <p class="text-xs md:text-sm text-slate-300 leading-relaxed">
+            Una guía interactiva diseñada para comprender el circuito de control de calidad, el funcionamiento contrabalanceado de las <strong>Aulas A y B</strong>, y la inspección analítica de respuestas en <strong>Diseño Publicitario, Modas, Interiores y Comunicación Audiovisual</strong>.
+          </p>
+        </div>
+
+        <!-- Quick Summary Board -->
+        <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 grid grid-cols-2 gap-3 w-full lg:w-auto font-mono text-xs">
+          <div>
+            <span class="text-slate-400 block text-[11px]">Diseño:</span>
+            <span class="text-sky-400 font-bold">Crossover AB / BA</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[11px]">Participantes:</span>
+            <span class="text-indigo-400 font-bold">150 alumnos (6 Secc.)</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[11px]">Cuadernillos:</span>
+            <span class="text-emerald-400 font-bold">300 (150 A + 150 B)</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[11px]">Fiabilidad:</span>
+            <span class="text-amber-400 font-bold">ICC &ge; 0.85 (Doble Ciego)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex border-b border-slate-800 mt-8 gap-4 md:gap-8 overflow-x-auto text-xs md:text-sm">
+        <button onclick="switchTab('tab-circuit')" id="btn-tab-circuit" class="py-3 px-3 tab-active transition-all whitespace-nowrap flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          1. Circuito de Eventos (El Viaje del Protocolo)
+        </button>
+        <button onclick="switchTab('tab-aulas')" id="btn-tab-aulas" class="py-3 px-3 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          2. Dinámica de Aulas A y B (Diseño AB/BA)
+        </button>
+        <button onclick="switchTab('tab-scanner')" id="btn-tab-scanner" class="py-3 px-3 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+          3. Escáner de Calificación (4 Carreras)
+        </button>
+        <button onclick="switchTab('tab-html-guide')" id="btn-tab-html-guide" class="py-3 px-3 text-slate-400 hover:text-white transition-all whitespace-nowrap flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+          4. Explicación Técnica del Código HTML/JS
+        </button>
+      </nav>
+    </header>
+
+    <!-- SECTION 1: CIRCUITO DE EVENTOS (ANIMADO CON CSS) -->
+    <section id="tab-circuit" class="tab-pane space-y-6">
+      
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <span class="text-xs font-bold text-sky-400 uppercase tracking-wider block">Cadena de Custodia Psicométrica</span>
+            <h2 class="text-xl font-bold text-white">El Circuito de un Protocolo: De la Mano del Alumno a la Base de Datos</h2>
+          </div>
+          <button onclick="playCircuitAnimation()" class="px-4 py-2 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-sky-500/20 transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            ▶ Iniciar Simulación del Viaje
+          </button>
+        </div>
+
+        <!-- 6 Connected Circuit Nodes Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 pt-2">
+          
+          <!-- Node 1 -->
+          <div id="c-node-1" onclick="setCircuitNode(1)" class="cursor-pointer p-4 rounded-2xl bg-slate-850 border border-slate-700 transition-all space-y-2 hover:border-sky-500">
+            <div class="flex justify-between items-center">
+              <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xs flex items-center justify-center border border-blue-500/30">1</span>
+              <span class="text-[10px] text-slate-400 uppercase font-mono">Aula</span>
+            </div>
+            <h3 class="text-xs font-bold text-white">Aplicación en Taller</h3>
+            <p class="text-[11px] text-slate-400">10 minutos por actividad en sesión regular.</p>
+          </div>
+
+          <!-- Node 2 -->
+          <div id="c-node-2" onclick="setCircuitNode(2)" class="cursor-pointer p-4 rounded-2xl bg-slate-850 border border-slate-700 transition-all space-y-2 hover:border-sky-500">
+            <div class="flex justify-between items-center">
+              <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xs flex items-center justify-center border border-purple-500/30">2</span>
+              <span class="text-[10px] text-slate-400 uppercase font-mono">Seguridad</span>
+            </div>
+            <h3 class="text-xs font-bold text-white">Cintado Ciego</h3>
+            <p class="text-[11px] text-slate-400">Se oculta nombre, carrera y sección.</p>
+          </div>
+
+          <!-- Node 3 -->
+          <div id="c-node-3" onclick="setCircuitNode(3)" class="cursor-pointer p-4 rounded-2xl bg-slate-850 border border-slate-700 transition-all space-y-2 hover:border-sky-500">
+            <div class="flex justify-between items-center">
+              <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xs flex items-center justify-center border border-amber-500/30">3</span>
+              <span class="text-[10px] text-slate-400 uppercase font-mono">Mezcla</span>
+            </div>
+            <h3 class="text-xs font-bold text-white">Aleatorización</h3>
+            <p class="text-[11px] text-slate-400">Lote único de 300 protocolos mezclados.</p>
+          </div>
+
+          <!-- Node 4 -->
+          <div id="c-node-4" onclick="setCircuitNode(4)" class="cursor-pointer p-4 rounded-2xl bg-slate-850 border border-slate-700 transition-all space-y-2 hover:border-sky-500">
+            <div class="flex justify-between items-center">
+              <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center border border-emerald-500/30">4</span>
+              <span class="text-[10px] text-slate-400 uppercase font-mono">Evaluación</span>
+            </div>
+            <h3 class="text-xs font-bold text-white">Doble Ciego (30%)</h3>
+            <p class="text-[11px] text-slate-400">90 cuadernillos calificados por 2 jueces.</p>
+          </div>
+
+          <!-- Node 5 -->
+          <div id="c-node-5" onclick="setCircuitNode(5)" class="cursor-pointer p-4 rounded-2xl bg-slate-850 border border-slate-700 transition-all space-y-2 hover:border-sky-500">
+            <div class="flex justify-between items-center">
+              <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xs flex items-center justify-center border border-rose-500/30">5</span>
+              <span class="text-[10px] text-slate-400 uppercase font-mono">Filtro &Delta;</span>
+            </div>
+            <h3 class="text-xs font-bold text-white">Control de Deriva</h3>
+            <p class="text-[11px] text-slate-400">Detección de discordias &ge; 2 puntos.</p>
+          </div>
+
+          <!-- Node 6 -->
+          <div id="c-node-6" onclick="setCircuitNode(6)" class="cursor-pointer p-4 rounded-2xl bg-slate-850 border border-slate-700 transition-all space-y-2 hover:border-sky-500">
+            <div class="flex justify-between items-center">
+              <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xs flex items-center justify-center border border-teal-500/30">6</span>
+              <span class="text-[10px] text-slate-400 uppercase font-mono">Validación</span>
+            </div>
+            <h3 class="text-xs font-bold text-white">Cierre en Matriz</h3>
+            <p class="text-[11px] text-slate-400">Ingreso a la base de datos para el AFC.</p>
+          </div>
+
+        </div>
+
+        <!-- Dynamic Explanatory Station Card -->
+        <div class="p-6 rounded-2xl bg-slate-850 border border-slate-700 space-y-4">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-3">
+              <span id="circuit-badge-step" class="text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-3 py-1 rounded-full uppercase">Estación Activa: 1 / 6</span>
+              <h3 id="circuit-station-title" class="text-base font-bold text-white">Estación 1: Aplicación Estandarizada en Aula de Taller</h3>
+            </div>
+            <span id="circuit-station-tag" class="text-xs text-slate-400 font-mono">Semana 1 (Pretest) o Semana 16 (Postest)</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300 leading-relaxed">
+            <div class="space-y-2">
+              <strong class="text-white block font-semibold">¿Qué ocurre en el aula?</strong>
+              <p id="circuit-what-happens">
+                El docente de la unidad didáctica (en Diseño Publicitario, Modas, Interiores o Audiovisual) entrega los cuadernillos físicos oficiales de STS. La administración dura exactamente 30 minutos de trabajo neto divididos en tres bloques de 10 minutos (Actividades 1, 2 y 3).
+              </p>
+            </div>
+            <div class="space-y-2 bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+              <strong class="text-sky-300 block font-semibold">Garantía metodológica:</strong>
+              <p id="circuit-methodology-note">
+                El evaluador no interviene ni sugiere ideas. Se garantiza que los estudiantes que trabajan no sufran sobrecarga extra, ya que la evaluación sustituye una sesión habitual de taller de bocetería (Campos y López, 2025; Marcelo-Torres et al., 2024).
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SECTION 2: DINÁMICA DE AULAS A Y B (DISEÑO CRUZADO AB/BA) -->
+    <section id="tab-aulas" class="tab-pane hidden space-y-6">
+      
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6">
+        <div class="border-b border-slate-800 pb-4">
+          <span class="text-xs font-bold text-purple-400 uppercase tracking-wider block">Diseño Cuasiexperimental de Medidas Repetidas</span>
+          <h2 class="text-xl font-bold text-white mt-1">¿Cómo funcionan las Aulas A y B en el Diseño Contrabalanceado?</h2>
+          <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+            En la educación superior técnica no es ético ni viable dejar a un grupo de estudiantes sin el modelo inclusivo durante todo el semestre. Por ello se aplica un <strong>diseño cruzado (*crossover*)</strong> donde todas las secciones reciben el modelo DUA-Experiencial, pero en momentos invertidos:
+          </p>
+        </div>
+
+        <!-- Interactive Week Slider -->
+        <div class="bg-slate-850 p-5 rounded-2xl border border-slate-700 space-y-3">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-bold text-white uppercase tracking-wider">Línea de Tiempo del Semestre Académico:</span>
+            <span id="slider-week-label" class="font-mono font-bold text-sky-400 bg-sky-950 px-3 py-1 rounded border border-sky-800">Semana 1: Línea Base (Pretest)</span>
+          </div>
+          <input type="range" id="crossover-slider" min="1" max="3" value="1" oninput="updateCrossoverView()" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-500">
+          <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+            <span>Paso 1: Inicio (Semana 1)</span>
+            <span>Paso 2: Rotación / Cruce (Semana 8)</span>
+            <span>Paso 3: Cierre (Semana 16)</span>
+          </div>
+        </div>
+
+        <!-- Comparative Classrooms Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Bloque Aulas A -->
+          <div class="p-6 rounded-2xl bg-slate-850 border border-slate-700 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+              <div>
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider block">Grupo 1 (Aulas A)</span>
+                <h3 class="text-sm font-bold text-white">Secciones 01, 02 y 03 ($n = 75$)</h3>
+              </div>
+              <span id="badge-aula-a" class="text-xs font-mono px-2.5 py-1 rounded bg-blue-950 text-blue-300 border border-blue-800">Fase 1: Modelo MPI-DUAE</span>
+            </div>
+
+            <div class="space-y-3 text-xs text-slate-300">
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="text-slate-400 block text-[11px]">Semanas 1 a 8:</span>
+                <strong id="desc-aula-a-p1" class="text-emerald-400 block mt-0.5">Reciben el Modelo Integrado DUA-Experiencial</strong>
+                <p class="text-[11px] text-slate-400 mt-1">Se ofrecen múltiples formatos de representación y rutas alternativas de taller.</p>
+              </div>
+
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="text-slate-400 block text-[11px]">Semanas 9 a 16:</span>
+                <strong id="desc-aula-a-p2" class="text-slate-300 block mt-0.5">Pasan a Condición de Control (Tradicional por Competencias)</strong>
+                <p class="text-[11px] text-slate-400 mt-1">Enseñanza estándar bajo el enfoque institucional normado sin diversificación DUA.</p>
+              </div>
+
+              <div class="text-[11px] text-blue-300 bg-blue-950/40 p-2.5 rounded-lg border border-blue-800/40 font-mono">
+                Evaluación: Pretest (Forma A) &bull; Postest (Forma B)
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloque Aulas B -->
+          <div class="p-6 rounded-2xl bg-slate-850 border border-slate-700 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+              <div>
+                <span class="text-xs font-bold text-purple-400 uppercase tracking-wider block">Grupo 2 (Aulas B)</span>
+                <h3 class="text-sm font-bold text-white">Secciones 04, 05 y 06 ($n = 75$)</h3>
+              </div>
+              <span id="badge-aula-b" class="text-xs font-mono px-2.5 py-1 rounded bg-purple-950 text-purple-300 border border-purple-800">Fase 1: Control Tradicional</span>
+            </div>
+
+            <div class="space-y-3 text-xs text-slate-300">
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="text-slate-400 block text-[11px]">Semanas 1 a 8:</span>
+                <strong id="desc-aula-b-p1" class="text-slate-300 block mt-0.5">Inician en Condición de Control (Tradicional)</strong>
+                <p class="text-[11px] text-slate-400 mt-1">Sirven como grupo de comparación natural frente al Grupo 1.</p>
+              </div>
+
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                <strong id="desc-aula-b-p2" class="text-emerald-400 block mt-0.5">Reciben el Modelo Integrado DUA-Experiencial</strong>
+                <p class="text-[11px] text-slate-400 mt-1">Se introduce la matriz de 12 celdas para garantizar equidad formativa.</p>
+              </div>
+
+              <div class="text-[11px] text-purple-300 bg-purple-950/40 p-2.5 rounded-lg border border-purple-800/40 font-mono">
+                Evaluación: Pretest (Forma A) &bull; Postest (Forma B)
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Why this cancels biases -->
+        <div class="p-5 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 border border-slate-800 text-xs text-slate-300 space-y-2">
+          <strong class="text-white flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            ¿Por qué este diseño elimina las amenazas a la validez interna?
+          </strong>
+          <p class="leading-relaxed text-[11px]">
+            Al contrastar las Aulas A con las Aulas B en un modelo lineal mixto de medidas repetidas, <strong>cada estudiante actúa como su propio control</strong>. Se neutraliza el efecto del docente particular, la maduración cronológica del alumno y la historia externa, asegurando que cualquier ganancia en el TTCT sea atribuible a la arquitectura pedagógica y no al azar.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SECTION 3: ESCÁNER DE CALIFICACIÓN PASO A PASO (4 CARRERAS) -->
+    <section id="tab-scanner" class="tab-pane hidden space-y-6">
+      
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6">
+        
+        <div class="border-b border-slate-800 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div>
+            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block">Laboratorio de Inspección Gráfica</span>
+            <h2 class="text-xl font-bold text-white mt-1">Escáner Psicométrico: Cómo Califican los Jueces en Vivo</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="triggerScannerAnimation()" class="px-3.5 py-1.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow transition-all flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+              Activar Escáner Óptico
+            </button>
+          </div>
+        </div>
+
+        <!-- Career Selector for Scanner -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <button onclick="selectScannerCareer('interiores')" id="scan-pill-interiores" class="career-card active p-3 rounded-xl border border-slate-700 bg-slate-850 text-left transition-all">
+            <span class="text-xs text-emerald-400 font-bold block">🏛️ Interiores</span>
+            <span class="text-[11px] text-slate-400 block">Habitación vs Microespacio</span>
+          </button>
+          <button onclick="selectScannerCareer('publicidad')" id="scan-pill-publicidad" class="career-card p-3 rounded-xl border border-slate-700 bg-slate-850 text-left transition-all">
+            <span class="text-xs text-blue-400 font-bold block">🎨 Publicidad</span>
+            <span class="text-[11px] text-slate-400 block">Caja cartón vs Señalética</span>
+          </button>
+          <button onclick="selectScannerCareer('modas')" id="scan-pill-modas" class="career-card p-3 rounded-xl border border-slate-700 bg-slate-850 text-left transition-all">
+            <span class="text-xs text-pink-400 font-bold block">👗 Modas</span>
+            <span class="text-[11px] text-slate-400 block">Falda ZOL vs Capa inclusiva</span>
+          </button>
+          <button onclick="selectScannerCareer('audiovisual')" id="scan-pill-audiovisual" class="career-card p-3 rounded-xl border border-slate-700 bg-slate-850 text-left transition-all">
+            <span class="text-xs text-amber-400 font-bold block">🎬 Audiovisual</span>
+            <span class="text-[11px] text-slate-400 block">Televisor vs Encuadre</span>
+          </button>
+        </div>
+
+        <!-- Scanner Stage Display -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Animated Scanner Canvas Box -->
+          <div class="lg:col-span-6 bg-slate-950 border border-slate-800 rounded-2xl p-6 relative overflow-hidden flex flex-col items-center justify-center space-y-4">
+            <div id="scanner-light-beam" class="scan-bar hidden"></div>
+            
+            <div class="relative w-72 h-72 bg-slate-900 border-2 border-dashed border-slate-700 rounded-2xl flex items-center justify-center p-4">
+              <svg id="scanner-drawing-svg" viewBox="0 0 100 100" class="w-full h-full">
+                <!-- Injected by JS -->
+              </svg>
+            </div>
+
+            <!-- Drawing Title display -->
+            <div class="w-full text-center space-y-1">
+              <span id="scan-drawing-badge" class="text-xs font-mono px-2.5 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800">Caso Cliché ZOL</span>
+              <div id="scan-drawing-title" class="text-sm font-bold text-white font-mono">"Una habitación con ventana"</div>
+            </div>
+          </div>
+
+          <!-- Event-by-event Stepper Diagnostic -->
+          <div class="lg:col-span-6 bg-slate-850 border border-slate-700 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+            <div>
+              <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 class="text-sm font-bold text-white">Inspección de las 5 Dimensiones Normativas</h3>
+                <span id="scan-total-score" class="text-lg font-mono font-black text-rose-400">2 / 11 pts</span>
+              </div>
+
+              <!-- Animated Step Items -->
+              <div class="space-y-2 pt-3 text-xs">
+                
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
+                  <div>
+                    <span class="font-bold text-sky-400">1. Fluidez:</span>
+                    <span id="scan-flu-desc" class="text-slate-300 ml-1">Completó la figura reconocible</span>
+                  </div>
+                  <span id="scan-flu-score" class="font-mono font-bold text-sky-400">1 pt</span>
+                </div>
+
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
+                  <div>
+                    <span class="font-bold text-rose-400">2. Originalidad:</span>
+                    <span id="scan-orig-desc" class="text-slate-300 ml-1">Figura en lista ZOL (0 pts)</span>
+                  </div>
+                  <span id="scan-orig-score" class="font-mono font-bold text-rose-400">0 pts</span>
+                </div>
+
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
+                  <div>
+                    <span class="font-bold text-amber-400">3. Elaboración:</span>
+                    <span id="scan-elab-desc" class="text-slate-300 ml-1">Solo 1 ventana agregada (+1)</span>
+                  </div>
+                  <span id="scan-elab-score" class="font-mono font-bold text-amber-400">1 detalle</span>
+                </div>
+
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
+                  <div>
+                    <span class="font-bold text-purple-400">4. Abstracción Título:</span>
+                    <span id="scan-tit-desc" class="text-slate-300 ml-1">Literal / Descriptivo obvio</span>
+                  </div>
+                  <span id="scan-tit-score" class="font-mono font-bold text-purple-400">0 pts</span>
+                </div>
+
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
+                  <div>
+                    <span class="font-bold text-slate-400">5. Resistencia Cierre:</span>
+                    <span id="scan-cierre-desc" class="text-slate-300 ml-1">Selló las paredes de inmediato</span>
+                  </div>
+                  <span id="scan-cierre-score" class="font-mono font-bold text-slate-400">0 pts</span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Cognitive Interpretation -->
+            <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 text-[11px] text-slate-300 space-y-1">
+              <strong class="text-white block font-semibold">Diagnóstico del Evaluador Senior:</strong>
+              <p id="scan-senior-verdict">
+                El estudiante demuestra fijación funcional: busca cerrar la incertidumbre formal convirtiendo el estímulo en un recinto hermético. Se adjudica 2 / 11 puntos con acuerdo total de ambos calificadores.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SECTION 4: EXPLICACIÓN TÉCNICA DEL CÓDIGO HTML / JS -->
+    <section id="tab-html-guide" class="tab-pane hidden space-y-6">
+      
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6">
+        
+        <div class="border-b border-slate-800 pb-4">
+          <span class="text-xs font-bold text-sky-400 uppercase tracking-wider block">Documentación y Arquitectura de la Solución</span>
+          <h2 class="text-xl font-bold text-white mt-1">Cómo Funciona Internamente esta Aplicación Web Interactiva</h2>
+          <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+            Esta herramienta fue construida siguiendo los estándares de <strong>Generative UI</strong> y desarrollo web moderno. A continuación se desglosan sus cuatro componentes estructurales para su comprensión y defensa técnica:
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-300">
+          
+          <!-- Bloque 1: HTML5 Semántico -->
+          <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700 space-y-2">
+            <span class="text-xs font-mono font-bold text-blue-400 uppercase block">1. Estructura Semántica (HTML5)</span>
+            <h3 class="text-sm font-bold text-white">Arquitectura Modular por Pestañas (*Tabs*)</h3>
+            <p class="leading-relaxed">
+              La página utiliza elementos semánticos estándar (<code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;nav&gt;</code>). Cada una de las 4 secciones está encapsulada en un contenedor con clase <code>tab-pane</code>. Mediante selectores de clase y estado condicional, la interfaz activa o desactiva la visibilidad sin recargar la página.
+            </p>
+          </div>
+
+          <!-- Bloque 2: CSS y Tailwind -->
+          <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700 space-y-2">
+            <span class="text-xs font-mono font-bold text-purple-400 uppercase block">2. Estilos y Animaciones (CSS3 + Tailwind)</span>
+            <h3 class="text-sm font-bold text-white">Animaciones Nativas sin Librerías Pesadas</h3>
+            <p class="leading-relaxed">
+              Se utiliza el CDN oficial seguro de Tailwind CSS (<code>tailwindcss.min.js</code>) para maquetación basada en rejillas responsivas (<em>CSS Grid</em> y <em>Flexbox</em>). Las animaciones de pulso de los nodos y el haz de escáner están programadas mediante reglas nativas <code>@keyframes pulseGlow</code> y <code>@keyframes scanLight</code>, lo que garantiza fluidez a 60 FPS sin bloquear la CPU.
+            </p>
+          </div>
+
+          <!-- Bloque 3: Motor de Datos JavaScript -->
+          <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700 space-y-2">
+            <span class="text-xs font-mono font-bold text-emerald-400 uppercase block">3. Motor Reactivo de Datos (JavaScript Vanilla)</span>
+            <h3 class="text-sm font-bold text-white">Estructura de Objetos y Estado Dinámico</h3>
+            <p class="leading-relaxed">
+              Toda la casuística psicométrica de las 4 carreras reside en un objeto JSON nativo (<code>careerData</code>). Cuando el usuario hace clic en una carrera o un nivel (Cliché vs. Divergente), una función controladora (<code>selectCareer()</code> y <code>updateGalleryView()</code>) actualiza reactivamente el DOM: cambia el código vectorial SVG del dibujo, los puntajes y la justificación teórica en milisegundos.
+            </p>
+          </div>
+
+          <!-- Bloque 4: Gráficos Vectoriales SVG -->
+          <div class="p-5 rounded-2xl bg-slate-850 border border-slate-700 space-y-2">
+            <span class="text-xs font-mono font-bold text-amber-400 uppercase block">4. Renderizado Gráfico Vectorial (SVG)</span>
+            <h3 class="text-sm font-bold text-white">Trazos de Estudiantes Escalables</h3>
+            <p class="leading-relaxed">
+              En lugar de imágenes de mapa de bits (PNG/JPG) que se pixelan, los cuadernillos se representan con vectores <code>&lt;svg viewBox="0 0 100 100"&gt;</code>. El estímulo de Torrance se dibuja con trazo grueso gris (<code>stroke="#64748b"</code>) y los añadidos del estudiante se colorean en azul cian, permitiendo al usuario identificar de inmediato qué parte es el estímulo y qué parte es la respuesta creativa.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- MASTER JAVASCRIPT LOGIC -->
+  <script>
+    // Tab switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('nav button').forEach(btn => {
+        btn.classList.remove('tab-active');
+        btn.classList.add('text-slate-400');
+      });
+
+      const activeTab = document.getElementById(tabId);
+      if (activeTab) activeTab.classList.remove('hidden');
+
+      const activeBtn = document.getElementById('btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('tab-active');
+        activeBtn.classList.remove('text-slate-400');
+      }
+    }
+
+    // 1. Circuit Animation Logic
+    const circuitStations = [
+      {
+        step: "Estación 1 / 6",
+        title: "Estación 1: Aplicación Estandarizada en Aula de Taller",
+        tag: "Semana 1 (Pretest) o Semana 16 (Postest)",
+        what: "El docente de la unidad didáctica (en Diseño Publicitario, Modas, Interiores o Audiovisual) entrega los cuadernillos físicos oficiales de STS. La administración dura exactamente 30 minutos de trabajo neto divididos en tres bloques de 10 minutos (Actividades 1, 2 y 3).",
+        methodology: "El evaluador no interviene ni sugiere ideas. Se garantiza que los estudiantes que trabajan no sufran sobrecarga extra, ya que la evaluación sustituye una sesión habitual de taller de bocetería (Campos y López, 2025; Marcelo-Torres et al., 2024)."
+      },
+      {
+        step: "Estación 2 / 6",
+        title: "Estación 2: Mesa de Enmascaramiento y Cintado Ciego",
+        tag: "Procedimiento de Seguridad Ética",
+        what: "Un asistente administrativo independiente coloca cinta adhesiva opaca sobre el nombre del alumno, sección, turno y carrera en los 300 cuadernillos. Se estampa un código alfanumérico aleatorio (ej. TTCT-042).",
+        methodology: "Evita el sesgo de halo: los evaluadores no saben si están corrigiendo el trabajo de un estudiante talentoso o de uno con historial de bajo rendimiento académico."
+      },
+      {
+        step: "Estación 3 / 6",
+        title: "Estación 3: Aleatorización Cruzada en Lote Único",
+        tag: "Control de Efecto Pretest / Postest",
+        what: "Los 150 cuadernillos de la Forma A (pretest) y los 150 de la Forma B (postest) se mezclan en una urna aleatoria formando un único lote homogéneo de 300 protocolos.",
+        methodology: "Garantiza que el calificador desconozca si está puntuando la línea base previa a la intervención o la salida posterior a la aplicación del DUA (Torrance, 2018)."
+      },
+      {
+        step: "Estación 4 / 6",
+        title: "Estación 4: Mesa de Doble Calificación Ciega (Muestra del 30%)",
+        tag: "90 Protocolos en Doble Registro Paralelo",
+        what: "90 protocolos extraídos al azar son calificados simultáneamente e independientemente por el Juez 1 (psicólogo metodólogo) y el Juez 2 (docente de taller). Los 210 restantes se reparten 105 a cada uno.",
+        methodology: "Permite calcular de forma continua el Coeficiente de Correlación Intraclase (ICC) y monitorear la fatiga del evaluador (Koo & Li, 2016; Alabbasi et al., 2022)."
+      },
+      {
+        step: "Estación 5 / 6",
+        title: "Estación 5: Sensor de Discrepancias y Control de Deriva",
+        tag: "Alerta Técnica de Disparidad",
+        what: "El sistema audita las puntuaciones de los 90 casos dobles. Si la discrepancia en una dimensión es ≤ 1 punto, se promedia directamente. Si es ≥ 2 puntos (Δ ≥ 2), salta una bandera de alerta de arbitraje.",
+        methodology: "Controla el 'rater drift' (deriva de criterio): evita que los calificadores se vuelvan progresivamente más severos o más indulgentes al final del día (Rohrbach et al., 2007)."
+      },
+      {
+        step: "Estación 6 / 6",
+        title: "Estación 6: Consenso Técnico y Cierre en Base de Datos",
+        tag: "Ingreso al Modelo Estadístico",
+        what: "Los evaluadores resuelven las discrepancias cotejando la Streamlined Scoring Guide. De mantenerse el desacuerdo, el investigador principal emite el laudo definitivo y el dato se asienta en la matriz final.",
+        methodology: "Los datos limpios de la línea base se ingresan a un Análisis Factorial Confirmatorio (AFC) para verificar si operan como 5 dimensiones independientes o un modelo bifactorial (Said-Metwaly et al., 2018)."
+      }
+    ];
+
+    let currentCircuitStep = 1;
+    let circuitInterval = null;
+
+    function setCircuitNode(nodeIdx) {
+      currentCircuitStep = nodeIdx;
+      for (let i = 1; i <= 6; i++) {
+        const el = document.getElementById('c-node-' + i);
+        if (i === nodeIdx) {
+          el.className = 'node-active cursor-pointer p-4 rounded-2xl bg-slate-850 border border-sky-400 transition-all space-y-2';
+        } else {
+          el.className = 'cursor-pointer p-4 rounded-2xl bg-slate-850 border border-slate-700 transition-all space-y-2 hover:border-sky-500';
+        }
+      }
+
+      const st = circuitStations[nodeIdx - 1];
+      document.getElementById('circuit-badge-step').innerText = st.step;
+      document.getElementById('circuit-station-title').innerText = st.title;
+      document.getElementById('circuit-station-tag').innerText = st.tag;
+      document.getElementById('circuit-what-happens').innerText = st.what;
+      document.getElementById('circuit-methodology-note').innerText = st.methodology;
+    }
+
+    function playCircuitAnimation() {
+      if (circuitInterval) clearInterval(circuitInterval);
+      currentCircuitStep = 1;
+      setCircuitNode(1);
+
+      circuitInterval = setInterval(() => {
+        currentCircuitStep++;
+        if (currentCircuitStep > 6) {
+          clearInterval(circuitInterval);
+          circuitInterval = null;
+        } else {
+          setCircuitNode(currentCircuitStep);
+        }
+      }, 2500);
+    }
+
+    // 2. Crossover Slider Logic (Aulas A y B)
+    function updateCrossoverView() {
+      const val = parseInt(document.getElementById('crossover-slider').value);
+      const label = document.getElementById('slider-week-label');
+      const badgeA = document.getElementById('badge-aula-a');
+      const badgeB = document.getElementById('badge-aula-b');
+
+      if (val === 1) {
+        label.innerText = 'Semana 1: Línea Base Inicial (Pretest Forma A)';
+        badgeA.innerText = 'Fase 1: Modelo MPI-DUAE';
+        badgeA.className = 'text-xs font-mono px-2.5 py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-800';
+        badgeB.innerText = 'Fase 1: Control Tradicional';
+        badgeB.className = 'text-xs font-mono px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700';
+      } else if (val === 2) {
+        label.innerText = 'Semana 8: Punto de Cruce (Rotación de Condiciones)';
+        badgeA.innerText = 'Transición metodológica';
+        badgeA.className = 'text-xs font-mono px-2.5 py-1 rounded bg-amber-950 text-amber-300 border border-amber-800';
+        badgeB.innerText = 'Transición metodológica';
+        badgeB.className = 'text-xs font-mono px-2.5 py-1 rounded bg-amber-950 text-amber-300 border border-amber-800';
+      } else {
+        label.innerText = 'Semana 16: Evaluación de Salida Final (Postest Forma B)';
+        badgeA.innerText = 'Fase 2: Control Tradicional';
+        badgeA.className = 'text-xs font-mono px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700';
+        badgeB.innerText = 'Fase 2: Modelo MPI-DUAE';
+        badgeB.className = 'text-xs font-mono px-2.5 py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-800';
+      }
+    }
+
+    // 3. Scanner Data
+    const scannerData = {
+      interiores: {
+        title: '"Una habitación con ventana"',
+        badge: 'Caso Cliché ZOL (Interiores)',
+        badgeClass: 'bg-rose-950 text-rose-400 border border-rose-800',
+        score: '2 / 11 pts',
+        flu: '1 pt', fluDesc: 'Figura cerrada interpretable',
+        orig: '0 pts', origDesc: 'Habitación figura en lista ZOL',
+        elab: '1 detalle', elabDesc: 'Solo 1 ventana agregada (+1)',
+        tit: '0 pts', titDesc: 'Título meramente literal',
+        cierre: '0 pts', cierreDesc: 'Selló los muros ortogonales',
+        verdict: 'Fijación funcional clásica: necesidad psicológica inmediata de cerrar la figura en un cuarto rectangular hermético sin exploración espacial.',
+        svg: `
+          <path d="M 30,70 L 30,30 L 70,30" fill="none" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+          <path d="M 70,30 L 70,70 L 30,70" fill="none" stroke="#34d399" stroke-width="2.5" />
+          <rect x="45" y="42" width="14" height="14" fill="none" stroke="#34d399" stroke-width="1.5" />
+          <line x1="52" y1="42" x2="52" y2="56" stroke="#34d399" stroke-width="1" />
+          <text x="25" y="85" font-size="4.5" fill="#94a3b8" font-family="sans-serif">TÍTULO: "HABITACIÓN CERRADA"</text>
+        `
+      },
+      publicidad: {
+        title: '"Llegar sin preguntar"',
+        badge: 'Ruptura Divergente (Publicidad)',
+        badgeClass: 'bg-emerald-950 text-emerald-400 border border-emerald-800',
+        score: '11 / 11 pts',
+        flu: '1 pt', fluDesc: 'Tótem de señalética comunitaria',
+        orig: '1 pt', origDesc: 'Inédita, fuera de lista ZOL',
+        elab: '4 detalles', elabDesc: 'Toldo (+1), flecha (+1), pictograma (+1), sombra (+1)',
+        tit: '3 pts', titDesc: 'Metáfora sobre autonomía de orientación',
+        cierre: '2 pts', cierreDesc: 'Usa el ángulo como voladizo abierto',
+        verdict: 'Ruptura paradigmática: el estudiante utiliza el dibujo para resolver un problema de comunicación gráfica e identidad barrial sin acudir a clichés.',
+        svg: `
+          <path d="M 30,70 L 30,30 L 70,30" fill="none" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+          <path d="M 30,30 Q 50,15 70,30" fill="none" stroke="#38bdf8" stroke-width="2.5" />
+          <path d="M 50,30 L 50,75" fill="none" stroke="#38bdf8" stroke-width="2" />
+          <polygon points="45,45 55,45 50,38" fill="#fbbf24" />
+          <circle cx="50" cy="55" r="3" fill="#38bdf8" />
+          <path d="M 20,70 L 80,70" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="2 2" />
+          <text x="22" y="87" font-size="4.5" fill="#38bdf8" font-family="sans-serif">TÍTULO: "LLEGAR SIN PREGUNTAR"</text>
+        `
+      },
+      modas: {
+        title: '"Piel sin costuras"',
+        badge: 'Ruptura Divergente (Modas)',
+        badgeClass: 'bg-emerald-950 text-emerald-400 border border-emerald-800',
+        score: '11 / 11 pts',
+        flu: '1 pt', fluDesc: 'Indumentaria adaptativa inclusiva',
+        orig: '1 pt', origDesc: 'Órtesis textil fuera de ZOL',
+        elab: '4 detalles', elabDesc: 'Cierre imantado (+1), drapeado (+2), textura (+1)',
+        tit: '3 pts', titDesc: 'Metáfora poética de dignidad corporal',
+        cierre: '2 pts', cierreDesc: 'Líneas envolventes abiertas',
+        verdict: 'Diseño universal transferido a la indumentaria: sustituye el molde de falda tradicional por un concepto de prenda sin barreras de motricidad.',
+        svg: `
+          <path d="M 30,70 L 30,30 L 70,30" fill="none" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+          <path d="M 70,30 Q 85,50 65,75" fill="none" stroke="#f472b6" stroke-width="2" />
+          <path d="M 30,30 Q 15,55 35,80" fill="none" stroke="#f472b6" stroke-width="2" />
+          <circle cx="50" cy="45" r="4" fill="#fbbf24" />
+          <path d="M 35,45 Q 50,60 65,45" fill="none" stroke="#f472b6" stroke-width="1.5" stroke-dasharray="2 2" />
+          <text x="22" y="90" font-size="4.5" fill="#f472b6" font-family="sans-serif">TÍTULO: "PIEL SIN COSTURAS"</text>
+        `
+      },
+      audiovisual: {
+        title: '"Lo que el marco calla"',
+        badge: 'Ruptura Divergente (Audiovisual)',
+        badgeClass: 'bg-emerald-950 text-emerald-400 border border-emerald-800',
+        score: '11 / 11 pts',
+        flu: '1 pt', fluDesc: 'Encuadre cinematográfico holandés',
+        orig: '1 pt', origDesc: 'Perspectiva óptica fuera de ZOL',
+        elab: '4 detalles', elabDesc: 'Guías (+1), fuga (+1), sombra (+1), atmósfera (+1)',
+        tit: '3 pts', titDesc: 'Metáfora sobre la elipsis narrativa',
+        cierre: '2 pts', cierreDesc: 'Fugas que continúan fuera del marco',
+        verdict: 'Pensamiento audiovisual avanzado: el estudiante utiliza el espacio para interrogar la mirada cinematográfica mediante el suspenso del fuera de campo.',
+        svg: `
+          <path d="M 30,70 L 30,30 L 70,30" fill="none" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+          <path d="M 25,25 L 35,25" stroke="#fbbf24" stroke-width="1.5" />
+          <path d="M 25,25 L 25,35" stroke="#fbbf24" stroke-width="1.5" />
+          <line x1="30" y1="70" x2="85" y2="85" stroke="#fbbf24" stroke-width="1.5" />
+          <line x1="70" y1="30" x2="90" y2="45" stroke="#fbbf24" stroke-width="1.5" />
+          <path d="M 50,55 L 75,65 L 70,55 Z" fill="#475569" />
+          <text x="20" y="90" font-size="4.5" fill="#fbbf24" font-family="sans-serif">TÍTULO: "LO QUE EL MARCO CALLA"</text>
+        `
+      }
+    };
+
+    function selectScannerCareer(key) {
+      document.querySelectorAll('.career-card').forEach(c => c.classList.remove('active'));
+      const activeCard = document.getElementById('scan-pill-' + key);
+      if (activeCard) activeCard.classList.add('active');
+
+      const d = scannerData[key];
+      document.getElementById('scan-drawing-title').innerText = d.title;
+      document.getElementById('scan-drawing-badge').innerText = d.badge;
+      document.getElementById('scan-drawing-badge').className = 'text-xs font-mono px-2.5 py-0.5 rounded ' + d.badgeClass;
+      document.getElementById('scan-total-score').innerText = d.score;
+
+      document.getElementById('scan-flu-score').innerText = d.flu;
+      document.getElementById('scan-flu-desc').innerText = d.fluDesc;
+      document.getElementById('scan-orig-score').innerText = d.orig;
+      document.getElementById('scan-orig-desc').innerText = d.origDesc;
+      document.getElementById('scan-elab-score').innerText = d.elab;
+      document.getElementById('scan-elab-desc').innerText = d.elabDesc;
+      document.getElementById('scan-tit-score').innerText = d.tit;
+      document.getElementById('scan-tit-desc').innerText = d.titDesc;
+      document.getElementById('scan-cierre-score').innerText = d.cierre;
+      document.getElementById('scan-cierre-desc').innerText = d.cierreDesc;
+
+      document.getElementById('scan-senior-verdict').innerText = d.verdict;
+      document.getElementById('scanner-drawing-svg').innerHTML = d.svg;
+
+      triggerScannerAnimation();
+    }
+
+    function triggerScannerAnimation() {
+      const beam = document.getElementById('scanner-light-beam');
+      beam.classList.remove('hidden');
+      setTimeout(() => {
+        beam.classList.add('hidden');
+      }, 2600);
+    }
+
+    // Default initialization
+    window.onload = function() {
+      setCircuitNode(1);
+      updateCrossoverView();
+      selectScannerCareer('interiores');
+    };
+  </script>
+</body>
+</html>
